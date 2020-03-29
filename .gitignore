@@ -17,5 +17,7 @@ __pycache__/
 static/
 posts/static/
 media/
+test/
+.vscode/
 
 db.sqlite3
