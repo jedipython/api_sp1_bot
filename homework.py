@@ -17,7 +17,8 @@ def parse_homework_status(homework):
     if homework.get('status') != 'approved':
         verdict = 'К сожалению в работе нашлись ошибки.'
     else:
-        verdict = 'Ревьюеру всё понравилось, можно приступать к следующему уроку.'
+        verdict = 'Ревьюеру всё понравилось, \
+             можно приступать к следующему уроку.'
     return f'У вас проверили работу "{homework_name}"!\n\n{verdict}'
 
 
@@ -30,7 +31,8 @@ def get_homework_statuses(current_timestamp):
 
 
 def send_message(message):
-    proxy = telegram.utils.request.Request(proxy_url='https://103.125.253.251:8080') 
+    proxy = telegram.utils.request.Request(
+        proxy_url='https://103.125.253.251:8080')
     bot = telegram.Bot(token=TELEGRAM_TOKEN, request=proxy)
     return bot.send_message(chat_id=CHAT_ID, text=message)
 
@@ -42,8 +44,10 @@ def main():
         try:
             new_homework = get_homework_statuses(current_timestamp)
             if new_homework.get('homeworks'):
-                send_message(parse_homework_status(new_homework.get('homeworks')[0]))
-            current_timestamp = new_homework.get('current_date')  # обновить timestamp
+                send_message(parse_homework_status(
+                    new_homework.get('homeworks')[0]))
+            current_timestamp = new_homework.get(
+                'current_date')  # обновить timestamp
             time.sleep(600)  # опрашивать раз в 10 минут
 
         except Exception as e:
