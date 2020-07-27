@@ -1,2 +1,9 @@
-# api_sp1_bot
-api sp1 bot
+# Push API Telegram Bot
+
+## Описание
+
+Телеграм бот, который оповещает студента при проверке его домашнего задания ревьювером.
+
+## Установка
+
+` pip install -r requirements.txt `
