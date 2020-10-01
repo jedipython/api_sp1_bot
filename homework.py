@@ -1,7 +1,8 @@
 import os
+import time
+
 import requests
 import telegram
-import time
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -13,6 +14,7 @@ CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
 
 
 def parse_homework_status(homework):
+    """В зависимости от статуса проверки домашней рабтоы, отправляет нужное сообщение."""
     homework_name = homework.get('homework_name')
     if homework.get('status') != 'approved':
         verdict = 'К сожалению в работе нашлись ошибки.'
@@ -23,6 +25,7 @@ def parse_homework_status(homework):
 
 
 def get_homework_statuses(current_timestamp):
+    """Получает статус проверки домашней работы через API."""
     url = 'https://praktikum.yandex.ru/api/user_api/homework_statuses/'
     headers = {'Authorization': f'OAuth {PRACTICUM_TOKEN}'}
     params = {'from_date': current_timestamp}
@@ -31,6 +34,7 @@ def get_homework_statuses(current_timestamp):
 
 
 def send_message(message):
+    """Отправляет сообщение в телеграм."""
     proxy = telegram.utils.request.Request(
         proxy_url='https://103.125.253.251:8080')
     bot = telegram.Bot(token=TELEGRAM_TOKEN, request=proxy)
@@ -38,7 +42,8 @@ def send_message(message):
 
 
 def main():
-    current_timestamp = int(time.time())  # начальное значение timestamp
+    """Основная функция, вызывает все функции и выполняет скрипт."""
+    current_timestamp = int(time.time())
 
     while True:
         try:
@@ -47,8 +52,8 @@ def main():
                 send_message(parse_homework_status(
                     new_homework.get('homeworks')[0]))
             current_timestamp = new_homework.get(
-                'current_date')  # обновить timestamp
-            time.sleep(600)  # опрашивать раз в 10 минут
+                'current_date')
+            time.sleep(600)
 
         except Exception as e:
             print(f'Бот упал с ошибкой: {e}')
